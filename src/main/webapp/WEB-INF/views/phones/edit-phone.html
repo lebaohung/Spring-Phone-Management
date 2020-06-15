@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Smartphone</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<body>
+<div id="container">
+    <h1>Edit Smartphone</h1>
+    <div>
+        <p>Here you can edit Smartphone: </p>
+        <div id="sPhoneFromResponse"></div>
+    </div>
+    <form action="" th:object="${sPhone}" id="editSmartphoneForm">
+        <table>
+            <tbody>
+            <tr>
+                <td>Producer: </td>
+                <td>
+                    <select name="" id="producer" th:field="*{producer}">
+                        <option value="NOKIA">Nokia</option>
+                        <option value="IPhone">Iphone</option>
+                        <option value="HTC">HTC</option>
+                        <option value="Samsung" selected>Samsung</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Model: </td>
+                <td><input th:field="*{model}"></td>
+            </tr>
+
+            <tr>
+                <td>Price: </td>
+                <td><input th:field="*{price}"></td>
+            </tr>
+
+            <tr>
+                <td><input type="submit" value="Edit"></td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+    <br>
+    <a href="/smartphones/">List</a>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#editSmartphoneForm').submit(function (event) {
+            var producer = $('#producer').val();
+            var model = $('#model').val();
+            var price = $('#price').val();
+            var json = {"producer": producer, "model": model, "price":price};
+            $.ajax({
+                url: $('#editSmartphoneForm').attr("action"),
+                data: JSON.stringify(json),
+                type: "POST",
+                beforeSend: function (xmlHttpRequest) {
+                    xmlHttpRequest.setRequestHeader("Accept", "application/json");
+                    xmlHttpRequest.setRequestHeader("Content-Type", "application/json");
+                },
+                success: function (smartphone) {
+                    var respContent = "";
+                    respContent += "<span class='success'>Smartphone was edited: [";
+                    respContent += smartphone.producer + " : ";
+                    respContent += smartphone.model + " : ";
+                    respContent += smartphone.price + "] </span> ";
+                    $("#sPhoneFromResponse").http(respContent);
+                }
+            });
+            event.preventDefault();
+        });
+    });
+</script>
+</body>
+</html>
